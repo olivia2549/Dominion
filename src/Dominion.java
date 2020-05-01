@@ -898,7 +898,7 @@ public class Dominion {
         ArrayList<Card> optionsTrash = new ArrayList<>();
         int option = 1;
         for (Card card : hand) {
-            if (card.getType().equals("Treasure")) {
+            if (card.getType().equals("Treasure") && !card.getType().equals("Gold")) {
                 System.out.println(option + ". " + card.cardInHand());
                 optionsTrash.add(card);
                 ++option;
