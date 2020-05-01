@@ -243,7 +243,7 @@ public class Dominion {
         String menuChoiceStr = scnr.nextLine();
         int menuChoice = getValidDigit(scnr, menuChoiceStr, 5);
 
-        while ((menuChoice != 5) && (findCard("Province", cardsInMiddle).getNumRemaining() > 0)) {
+        while (menuChoice != 5) {
 
             // Keeps track of whether the menu options should be reprinted after user chooses a number
             boolean noPrintOptions = false;
@@ -253,10 +253,15 @@ public class Dominion {
             } else if (menuChoice == 2) {   // Opponent played attack card or council room
                 playedAttackCard(scnr, cardsInMiddle, hand, drawPile, discardPile, info);
             } else if (menuChoice == 3) {   // Choose and play an action from your hand
-                noPrintOptions = chooseAction(scnr, cardsInMiddle, drawPile, discardPile, hand, info);
+                chooseAction(scnr, cardsInMiddle, drawPile, discardPile, hand, info);
             } else if (menuChoice == 4) {   // Buy a card
                 noPrintOptions = buyCard(scnr, cardsInMiddle, discardPile, hand, info);
             }
+
+            if (findCard("Province", cardsInMiddle).getNumRemaining() == 0) {
+                break;
+            }
+
             if (!noPrintOptions) {
                 printMenuOptions();
             }
@@ -272,6 +277,7 @@ public class Dominion {
         System.out.println("\n\n------------------------------- GAME OVER -------------------------------");
 
         int points = 0;
+        int numCards = 0;
         int numGardens = 0;
         int numEstates = 0;
         int numDuchys = 0;
@@ -281,6 +287,7 @@ public class Dominion {
         // Put all the cards into one pile and count up the points
         discardPile.addAll(drawPile);
         for (Card card : discardPile) {
+            ++numCards;
             if (card.getType().equals("Victory") || card.getType().equals("Curse")) {
                 points += card.getValue();
                 switch (card.getName()) {
@@ -305,6 +312,7 @@ public class Dominion {
         points += numPointsPerGarden*numGardens;
 
         System.out.println("You ended with " +
+                numCards + " total cards, " +
                 numEstates + " estates, " +
                 numDuchys + " duchys, " +
                 numProvinces + " provinces, " +
@@ -313,12 +321,11 @@ public class Dominion {
         System.out.println("Total points: " + points);
     }
 
-    public static boolean chooseAction(Scanner scnr, Card[] cardsInMiddle, ArrayList<Card> drawPile,
+    public static void chooseAction(Scanner scnr, Card[] cardsInMiddle, ArrayList<Card> drawPile,
                                        ArrayList<Card> discardPile, ArrayList<Card> hand, int[] info) {
         if (info[ACTIONS_POS] == 0) {
-            System.out.println("Sorry, you have no more actions left. Cannot execute option.");
-            System.out.println("Please enter a different choice:");
-            return true;    // Menu options should not be reprinted
+            System.out.println("\nSorry, you have no more actions left. Cannot execute option.");
+            System.out.println("Please enter a different choice:\n");
         } else {
             int option = 1;
             ArrayList<Card> options = new ArrayList<>();
@@ -340,7 +347,7 @@ public class Dominion {
             if (hasAction) {
                 System.out.println("Choose an action to play:");
                 String optionStr = scnr.nextLine();
-                int choice = getValidDigit(scnr, optionStr, (option-1));
+                int choice = getValidDigit(scnr, optionStr, option);
                 if (choice != (options.size() + 1)) {
                     Card cardPlayed = options.get(choice - 1);
 
@@ -358,11 +365,9 @@ public class Dominion {
                 }
                 System.out.println();
                 printInfo(hand, info);
-                return false; // Menu options should be printed
             } else {
                 System.out.println("Sorry, you don't have any action cards. Cannot execute option.");
                 System.out.println("Please enter a different choice:");
-                return true; // Menu options should not be reprinted
             }
         }
     }
@@ -385,7 +390,7 @@ public class Dominion {
                 chancellor(drawPile, discardPile);
                 break;
             case "Chapel":
-                chapel(scnr, hand);
+                chapel(scnr, hand, info);
                 break;
             case "Council Room":
                 councilRoom(scnr, drawPile, discardPile, hand, info, false);
@@ -419,7 +424,7 @@ public class Dominion {
                 moneylender(hand, info);
                 break;
             case "Remodel":
-                remodel(scnr, discardPile, hand, cardsInMiddle);
+                remodel(scnr, discardPile, hand, cardsInMiddle, info);
                 break;
             case "Smithy":
                 smithy(drawPile, discardPile, hand, info);
@@ -590,9 +595,12 @@ public class Dominion {
         return card;
     }
 
-    public static void discardCard(ArrayList<Card> hand, ArrayList<Card> discardPile, Card cardToDiscard) {
+    public static void discardCard(ArrayList<Card> hand, ArrayList<Card> discardPile, Card cardToDiscard, int[] info) {
         discardPile.add(cardToDiscard);
         hand.remove(cardToDiscard);
+        if (cardToDiscard.getType().equals("Treasure")) {
+            info[MONEY_POS] -= cardToDiscard.getValue();
+        }
     }
 
     // Finds the position of a given card to allow access
@@ -637,7 +645,7 @@ public class Dominion {
             System.out.println("Drew a(n) " + card.getName());
             while (!card.getType().equals("Treasure")) {
                 System.out.println("Not a treasure card. Discarding and drawing another...");
-                discardCard(hand, discardPile, card);
+                discardCard(hand, discardPile, card, info);
                 card = drawCard(hand, drawPile, discardPile, info);
                 System.out.println("Drew a(n) " + card.getName());
             }
@@ -697,7 +705,6 @@ public class Dominion {
         System.out.println();
 
         System.out.println("Choose the number(s) of the card(s) you would like to discard, each separated by a space:");
-        scnr.nextLine();
         String choices = scnr.nextLine();
         Scanner scanChoices = new Scanner(choices);
 
@@ -706,7 +713,7 @@ public class Dominion {
             System.out.println();
             Card chosenCard = options.get(option - 1);
             System.out.println("Discarding the " + chosenCard.getName() + " card...");
-            discardCard(hand, discardPile, chosenCard);
+            discardCard(hand, discardPile, chosenCard, info);
 
             System.out.println("Drawing a replacement...");
             Card card = drawCard(hand, drawPile, discardPile, info);
@@ -724,7 +731,7 @@ public class Dominion {
         System.out.println("Done.");
     }
 
-    public static void chapel(Scanner scnr, ArrayList<Card> hand) {
+    public static void chapel(Scanner scnr, ArrayList<Card> hand, int[] info) {
         ArrayList<Card> options = new ArrayList<>();
 
         int option = 1;
@@ -737,7 +744,6 @@ public class Dominion {
         System.out.println();
 
         System.out.println("Choose the number(s) of the card(s) you would like to trash, each separated by a space:");
-        scnr.nextLine();
         String choices = scnr.nextLine();
         Scanner scanChoices = new Scanner(choices);
 
@@ -746,6 +752,9 @@ public class Dominion {
             System.out.println();
             Card chosenCard = options.get(option - 1);
             System.out.println("Trashing the " + chosenCard.getName() + " card...");
+            if (chosenCard.getType().equals("Treasure")) {
+                info[MONEY_POS] -= chosenCard.getValue();
+            }
             hand.remove(chosenCard);
         }
     }
@@ -788,7 +797,7 @@ public class Dominion {
         int option = 1;
         for (Card card : cardsInMiddle) {
             if (card.getCost() <= 5) {
-                System.out.println(option + ". " + card);
+                System.out.println(option + ". " + card.cardInHand() + "\n");
                 options.add(card);
                 ++option;
             }
@@ -834,7 +843,7 @@ public class Dominion {
                 String optionStr = scnr.nextLine();
                 int choice = getValidDigit(scnr, optionStr, 2);
                 if (choice == 1) {
-                    discardCard(hand, discardPile, card);
+                    discardCard(hand, discardPile, card, info);
                 }
             }
         }
@@ -858,8 +867,7 @@ public class Dominion {
             System.out.println("Adding +$2...");
             info[MONEY_POS] += 2;
             System.out.println("Done.");
-            System.out.println();
-            System.out.println("Your opponent must now choose option 2 on their menu to be affected by your attack.");
+            System.out.println("\nYour opponent must now choose option 2 on their menu to be affected by your attack.");
             System.out.println("Press enter when they have done so:");
             scnr.nextLine();
         } else {
@@ -874,10 +882,7 @@ public class Dominion {
                 int option = getValidDigit(scnr, optionStr, hand.size());
                 Card cardToDiscard = hand.get(option - 1);
                 System.out.println("\nDiscarding the " + cardToDiscard.getName() + " card...");
-                if (cardToDiscard.getType().equals("Treasure")) {
-                    info[MONEY_POS] -= cardToDiscard.getValue();
-                }
-                discardCard(hand, discardPile, cardToDiscard);
+                discardCard(hand, discardPile, cardToDiscard, info);
                 System.out.println("Done.");
             }
             System.out.println("\nNew hand info:");
@@ -906,6 +911,7 @@ public class Dominion {
         int choice = getValidDigit(scnr, optionStr, (option-1));
         Card cardTrashed = optionsTrash.get(choice - 1);
         System.out.println("Trashing the " + cardTrashed.getName() + " card...");
+        info[MONEY_POS] -= cardTrashed.getValue();
         hand.remove(cardTrashed);
         System.out.println("Done.\n");
 
@@ -946,14 +952,15 @@ public class Dominion {
 
         if (trashedCopper) {
             System.out.println("Adding +$3...");
-            info[MONEY_POS] += 3;
+            info[MONEY_POS] += 2;
         } else {
             System.out.println("Sorry, you did not have a copper to trash. No extra money was added.");
         }
 
     }
 
-    public static void remodel(Scanner scnr, ArrayList<Card> discardPile, ArrayList<Card> hand, Card[] cardsInMiddle) {
+    public static void remodel(Scanner scnr, ArrayList<Card> discardPile, ArrayList<Card> hand, Card[] cardsInMiddle,
+                               int[] info) {
         System.out.println("Choose a card from your hand to trash.\n");
         System.out.println("Your options:");
 
@@ -971,6 +978,9 @@ public class Dominion {
         int choice = getValidDigit(scnr, optionStr, (option-1));
         Card cardTrashed = optionsTrash.get(choice - 1);
         System.out.println("Trashing the " + cardTrashed.getName() + " card...");
+        if (cardTrashed.getType().equals("Treasure")) {
+            info[MONEY_POS] -= cardTrashed.getValue();
+        }
         hand.remove(cardTrashed);
         System.out.println("Done.\n");
 
@@ -1119,16 +1129,21 @@ public class Dominion {
 
             System.out.println();
             if ((whichIsTreasure == 1) || (whichIsTreasure == 2)) {
-                System.out.println("You have a treasure card.");
-                System.out.println("Would your opponent like you to trash it? (1) yes, (2) no:");
+                System.out.println("You have a treasure card. Would your opponent like you to trash it? (1) yes, (2) no:");
                 String optionStr = scnr.nextLine();
                 int option = getValidDigit(scnr, optionStr, 2);
                 if (option == 1) {
-                    System.out.println("Trashing the card...");
-                    drawPile.remove(topCard);
-                    System.out.println("Discarding the " + secondCard.getName() + " card...");
-                    drawPile.remove(secondCard);
-                    discardPile.add(secondCard);
+                    if (whichIsTreasure == 1) {
+                        System.out.println("Trashing the " + topCard.getName() + " card...");
+                        drawPile.remove(topCard);
+                        System.out.println("Discarding the " + secondCard.getName() + " card...");
+                        discardPile.add(secondCard);
+                    } else {
+                        System.out.println("Trashing the " + secondCard.getName() + " card...");
+                        drawPile.remove(secondCard);
+                        System.out.println("Discarding the " + topCard.getName() + " card...");
+                        discardPile.add(topCard);
+                    }
                     System.out.println("Done.");
                 }
             } else if (whichIsTreasure == 3) {
@@ -1241,7 +1256,7 @@ public class Dominion {
         int option = 1;
         for (Card card : cardsInMiddle) {
             if (card.getCost() <= 4) {
-                System.out.println(option + ". " + card.cardInHand());
+                System.out.println(option + ". " + card.cardInHand() + "\n");
                 options.add(card);
                 ++option;
             }
