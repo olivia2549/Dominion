@@ -387,7 +387,7 @@ public class Dominion {
                 cellar(scnr, drawPile, discardPile, hand, info);
                 break;
             case "Chancellor":
-                chancellor(drawPile, discardPile);
+                chancellor(drawPile, discardPile, info);
                 break;
             case "Chapel":
                 chapel(scnr, hand, info);
@@ -722,7 +722,10 @@ public class Dominion {
 
     }
 
-    public static void chancellor(ArrayList<Card> drawPile, ArrayList<Card> discardPile) {
+    public static void chancellor(ArrayList<Card> drawPile, ArrayList<Card> discardPile, int[] info) {
+        System.out.println("Adding $2...");
+        info[MONEY_POS] += 2;
+        System.out.println("Done.\n");
         System.out.println("Moving the draw pile to the discard pile...");
         while (drawPile.size() > 0) {
             discardPile.add(drawPile.get(0));
