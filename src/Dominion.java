@@ -6,8 +6,6 @@ public class Dominion {
     public static final int MONEY_POS = 0;
     public static final int ACTIONS_POS = 1;
     public static final int BUYS_POS = 2;
-    public static final int ALL_CARD_TYPES = 32;
-
     public static void main(String[] args) throws FileNotFoundException {
         Card[] allCards = new Card[ALL_CARD_TYPES];
 
@@ -17,7 +15,7 @@ public class Dominion {
 
         Scanner scnr = new Scanner(System.in);
         Random rand = new Random();
-        rand.setSeed(5);
+        rand.setSeed(19);
 
         ArrayList<Card> drawPile = new ArrayList<>();
         ArrayList<Card> discardPile = new ArrayList<>();
@@ -32,6 +30,8 @@ public class Dominion {
         endGame(drawPile, discardPile);
 
     }
+
+    public static final int ALL_CARD_TYPES = 32;
 
     public static Card[] loadCards(Scanner fileScan, Card[] allCards) {
         fileScan.useDelimiter("\n\n");
@@ -146,14 +146,23 @@ public class Dominion {
             System.out.println();
             for (int i = 0; i < 10; ++i) {
                 System.out.println("Type the name action card #" + (i + 1));
-                String name = getValidName(scnr, allCards, cardsInMiddle);
+                String name = scnr.nextLine();
+                while (!isValid(allCards, cardsInMiddle, name)) {
+                    System.out.println("Not a valid card, or you may have already entered this card. Try again:");
+                    name = scnr.nextLine();
+                }
                 cardsInMiddle[i] = findCard(name, allCards);
             }
         } else {    // Random
-            int randNum;
+            int randNum = rand.nextInt(25);
             for (int i=0; i<10; ++i) {
-                randNum = rand.nextInt(25);
+                String name = actionCards[randNum].getName();
+                while (!isValid(allCards, cardsInMiddle, name)) {
+                    randNum = rand.nextInt(25);
+                    name = actionCards[randNum].getName();
+                }
                 cardsInMiddle[i] = findCard(actionCards[randNum].getName(), allCards);
+                randNum = rand.nextInt(25);
             }
         }
 
@@ -186,28 +195,21 @@ public class Dominion {
         return cardsInMiddle;
     }
 
-    public static String getValidName(Scanner scnr, Card[] allCards, Card[] cardsInMiddle) {
-        String name = scnr.nextLine();
-        boolean isValidName = false;
-        while (!isValidName) {
-            for (Card card : allCards) {
-                if (card.getName().equals(name)) {
-                    isValidName = true;
-                    for (Card cardMid : cardsInMiddle) {
-                        if (cardMid != null && cardMid.getName().equals(name)) {
-                            System.out.println("You have already entered this card.");
-                            isValidName = false;
-                        }
+    public static boolean isValid(Card[] allCards, Card[] cardsInMiddle, String name) {
+        boolean isValid = false;
+        for (Card card : allCards) {
+            if (card.getName().equals(name)) {
+                isValid = true;
+                for (Card cardMid : cardsInMiddle) {
+                    if (cardMid != null && cardMid.getName().equals(name)) {
+                        isValid = false;
+                        break;
                     }
                 }
             }
-            if (!isValidName) {
-                System.out.println("Not a valid card. Must use uppercase first letters. Try again:");
-                name = scnr.nextLine();
-            }
         }
 
-        return name;
+        return isValid;
     }
 
     public static void takeTurns(Scanner scnr, Card[] cardsInMiddle, ArrayList<Card> drawPile,
