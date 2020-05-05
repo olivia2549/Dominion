@@ -13,12 +13,15 @@ public class Dominion {
 
         File file = new File("iofiles/dominionCards.txt");
         Scanner fileScan = new Scanner(file);
-        loadCards(fileScan, allCards);
+        Card[] actionCards = loadCards(fileScan, allCards);
 
         Scanner scnr = new Scanner(System.in);
+        Random rand = new Random();
+        rand.setSeed(5);
+
         ArrayList<Card> drawPile = new ArrayList<>();
         ArrayList<Card> discardPile = new ArrayList<>();
-        Card[] cardsInMiddle = setup(scnr, allCards, drawPile);
+        Card[] cardsInMiddle = setup(scnr, allCards, actionCards, drawPile, rand);
 
         System.out.println("Press enter to begin your first turn.");
         scnr.nextLine();
@@ -30,7 +33,7 @@ public class Dominion {
 
     }
 
-    public static void loadCards(Scanner fileScan, Card[] allCards) {
+    public static Card[] loadCards(Scanner fileScan, Card[] allCards) {
         fileScan.useDelimiter("\n\n");
 
         // Reading from the input file to add all the cards
@@ -48,16 +51,22 @@ public class Dominion {
 
         // Printing out all the action cards and their descriptions so the user can choose
         System.out.println("ALL ACTION CARDS:\n");
+        Card[] actionCards = new Card[25];
+        int cardNum = 0;
         for (Card card : allCards) {
             if (card.getType().contains("Action")) {
                 System.out.println(card + "\n");
+                actionCards[cardNum] = card;
+                ++cardNum;
             }
         }
 
         System.out.println();
+        return actionCards;
     }
 
-    public static Card[] setup(Scanner scnr, Card[] allCards, ArrayList<Card> drawPile) {
+    public static Card[] setup(Scanner scnr, Card[] allCards, Card[] actionCards, ArrayList<Card> drawPile,
+                               Random rand) {
         System.out.println("Welcome! Please choose a game setup");
 
         System.out.println("1. First Game: Cellar, Market, Militia, Mine, Moat, Remodel, Smithy, Village, Woodcutter," +
@@ -71,12 +80,13 @@ public class Dominion {
         System.out.println("5. Village Square: Bureaucrat, Cellar, Festival, Library, Market, Remodel, Smithy, Throne" +
                 " Room, Village, Woodcutter");
         System.out.println("6. Custom");
+        System.out.println("7. Random");
 
         // Filling the cards in "middle" with the action cards chosen by the user
-        System.out.println("\nType 1, 2, 3, 4, 5, or 6:");
+        System.out.println("\nType 1, 2, 3, 4, 5, 6, or 7:");
         Card[] cardsInMiddle = new Card[17];
         String setupStr = scnr.nextLine();
-        int setup = getValidDigit(scnr, setupStr, 6);
+        int setup = getValidDigit(scnr, setupStr, 7);
         if (setup == 1) {
             cardsInMiddle[0] = findCard("Cellar", allCards);
             cardsInMiddle[1] = findCard("Market", allCards);
@@ -132,12 +142,18 @@ public class Dominion {
             cardsInMiddle[7] = findCard("Throne Room", allCards);
             cardsInMiddle[8] = findCard("Village", allCards);
             cardsInMiddle[9] = findCard("Woodcutter", allCards);
-        } else {
+        } else if (setup == 6) {    // Custom
             System.out.println();
             for (int i = 0; i < 10; ++i) {
                 System.out.println("Type the name action card #" + (i + 1));
                 String name = getValidName(scnr, allCards, cardsInMiddle);
                 cardsInMiddle[i] = findCard(name, allCards);
+            }
+        } else {    // Random
+            int randNum;
+            for (int i=0; i<10; ++i) {
+                randNum = rand.nextInt(25);
+                cardsInMiddle[i] = findCard(actionCards[randNum].getName(), allCards);
             }
         }
 
