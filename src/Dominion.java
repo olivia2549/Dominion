@@ -15,7 +15,7 @@ public class Dominion {
 
         Scanner scnr = new Scanner(System.in);
         Random rand = new Random();
-        rand.setSeed(19);
+        rand.setSeed(32317771);
 
         ArrayList<Card> drawPile = new ArrayList<>();
         ArrayList<Card> discardPile = new ArrayList<>();
@@ -598,11 +598,16 @@ public class Dominion {
                                 int[] info) {
         // If draw pile has <1 card, shuffle discard pile and add it to bottom of draw pile
         if (drawPile.size() < 1) {
-            Collections.shuffle(discardPile);
-            drawPile.addAll(discardPile);
-            discardPile.clear();
+            if (discardPile.size() > 0) {
+                Collections.shuffle(discardPile);
+                drawPile.addAll(discardPile);
+                discardPile.clear();
+            } else {
+                // problem
+                // do nothing
+                return new Card();
+            }
         }
-
         Card card = drawPile.get(0);
         hand.add(card);
         if (card.getType().equals("Treasure")) {
@@ -610,6 +615,7 @@ public class Dominion {
         }
 
         drawPile.remove(0);
+
         return card;
     }
 

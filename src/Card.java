@@ -8,7 +8,7 @@ public class Card {
 
     public Card() {
         type = "";
-        name = "";
+        name = "no card available";
         description = "";
         cost = 0;
         value = 0;
