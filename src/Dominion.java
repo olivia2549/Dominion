@@ -6,6 +6,9 @@ public class Dominion {
     public static final int MONEY_POS = 0;
     public static final int ACTIONS_POS = 1;
     public static final int BUYS_POS = 2;
+    public static final int ALL_CARD_TYPES = 34;
+    public static final int ALL_ACTION_CARDS = 27;
+
     public static void main(String[] args) throws FileNotFoundException {
         Card[] allCards = new Card[ALL_CARD_TYPES];
 
@@ -15,7 +18,7 @@ public class Dominion {
 
         Scanner scnr = new Scanner(System.in);
         Random rand = new Random();
-        rand.setSeed(32317771);
+        rand.setSeed(4321);
 
         ArrayList<Card> drawPile = new ArrayList<>();
         ArrayList<Card> discardPile = new ArrayList<>();
@@ -30,8 +33,6 @@ public class Dominion {
         endGame(drawPile, discardPile);
 
     }
-
-    public static final int ALL_CARD_TYPES = 32;
 
     public static Card[] loadCards(Scanner fileScan, Card[] allCards) {
         fileScan.useDelimiter("\n\n");
@@ -51,7 +52,7 @@ public class Dominion {
 
         // Printing out all the action cards and their descriptions so the user can choose
         System.out.println("ALL ACTION CARDS:\n");
-        Card[] actionCards = new Card[25];
+        Card[] actionCards = new Card[ALL_ACTION_CARDS];
         int cardNum = 0;
         for (Card card : allCards) {
             if (card.getType().contains("Action")) {
@@ -154,15 +155,15 @@ public class Dominion {
                 cardsInMiddle[i] = findCard(name, allCards);
             }
         } else {    // Random
-            int randNum = rand.nextInt(25);
+            int randNum = rand.nextInt(ALL_ACTION_CARDS);
             for (int i=0; i<10; ++i) {
                 String name = actionCards[randNum].getName();
                 while (!isValid(allCards, cardsInMiddle, name)) {
-                    randNum = rand.nextInt(25);
+                    randNum = rand.nextInt(ALL_ACTION_CARDS);
                     name = actionCards[randNum].getName();
                 }
                 cardsInMiddle[i] = findCard(actionCards[randNum].getName(), allCards);
-                randNum = rand.nextInt(25);
+                randNum = rand.nextInt(ALL_ACTION_CARDS);
             }
         }
 
@@ -420,6 +421,9 @@ public class Dominion {
             case "Festival":
                 festival(info);
                 break;
+            case "Junk Dealer":
+                junkDealer(scnr, drawPile, discardPile, hand, info);
+                break;
             case "Laboratory":
                 laboratory(drawPile, discardPile, hand, info);
                 break;
@@ -449,6 +453,9 @@ public class Dominion {
                 break;
             case "Spy":
                 spy(scnr, drawPile, discardPile, hand, info, false);
+                break;
+            case "Steward":
+                steward(scnr, drawPile, discardPile, hand, info);
                 break;
             case "Thief":
                 thief(scnr, drawPile, discardPile, cardsInMiddle, false);
@@ -847,6 +854,39 @@ public class Dominion {
         info[MONEY_POS] += 2;
     }
 
+    public static void junkDealer(Scanner scnr, ArrayList<Card> drawPile, ArrayList<Card> discardPile,
+                                  ArrayList<Card> hand, int[] info) {
+        System.out.println("Adding +1 Action and +$1...");
+        info[ACTIONS_POS] += 1;
+        info[MONEY_POS] += 1;
+        System.out.println("Done\n");
+        System.out.println("Drawing a card...");
+        Card cardDrawn = drawCard(drawPile, discardPile, hand, info);
+        System.out.println("You drew the " + cardDrawn.getName() + " card.\n");
+
+        System.out.println("Choose a card to trash.");
+        ArrayList<Card> optionsTrash = new ArrayList<>();
+        int option = 1;
+        for (Card card : hand) {
+            System.out.println(option + ". " + card.cardInHand());
+            optionsTrash.add(card);
+            ++option;
+        }
+
+        System.out.println();
+        System.out.println("Choose an option:");
+        String optionStr = scnr.nextLine();
+        int choice = getValidDigit(scnr, optionStr, (option-1));
+        Card cardTrashed = optionsTrash.get(choice - 1);
+        System.out.println("Trashing the " + cardTrashed.getName() + " card...");
+        if (cardTrashed.getType().equals("Treasure")) {
+            info[MONEY_POS] -= cardTrashed.getValue();
+        }
+        hand.remove(cardTrashed);
+        System.out.println("Done.\n");
+
+    }
+
     public static void laboratory(ArrayList<Card> drawPile, ArrayList<Card> discardPile, ArrayList<Card> hand,
                                   int[] info) {
         System.out.println("Adding +1 action:");
@@ -1087,6 +1127,51 @@ public class Dominion {
                 System.out.println("\nOkay, the card is now back in your draw pile.");
             }
         }
+    }
+
+    public static void steward(Scanner scnr, ArrayList<Card> drawPile, ArrayList<Card> discardPile,
+                               ArrayList<Card> hand, int[] info) {
+        System.out.println("Playing the steward...");
+        System.out.println("1. +2 Cards\n2. +$2\n3. Trash 2 cards from your hand.\n");
+        System.out.println("Choose an option:");
+        String choiceStr = scnr.nextLine();
+        int choice = getValidDigit(scnr, choiceStr, 3);
+
+        if (choice == 1) {
+            System.out.println("Drawing 2 cards...");
+            for (int i=0; i<2; ++i) {
+                Card card = drawCard(hand, drawPile, discardPile, info);
+                System.out.println("You drew the " + card.getName() + " card.\n");
+            }
+        } else if (choice == 2) {
+            System.out.println("Adding +$2...");
+            info[MONEY_POS] += 2;
+        } else {
+            System.out.println("Trash 2 cards from your hand.");
+            for (int i=0; i<2; ++i) {
+                System.out.println("Choose a card to trash.");
+                ArrayList<Card> optionsTrash = new ArrayList<>();
+                int option = 1;
+                for (Card card : hand) {
+                    System.out.println(option + ". " + card.cardInHand());
+                    optionsTrash.add(card);
+                    ++option;
+                }
+
+                System.out.println();
+                System.out.println("Choose an option:");
+                String optionStr = scnr.nextLine();
+                int choiceTrash = getValidDigit(scnr, optionStr, (option-1));
+                Card cardTrashed = optionsTrash.get(choiceTrash - 1);
+                System.out.println("Trashing the " + cardTrashed.getName() + " card...");
+                if (cardTrashed.getType().equals("Treasure")) {
+                    info[MONEY_POS] -= cardTrashed.getValue();
+                }
+                hand.remove(cardTrashed);
+                System.out.println("Done.\n");
+            }
+        }
+
     }
 
     public static void thief(Scanner scnr, ArrayList<Card> drawPile, ArrayList<Card> discardPile,

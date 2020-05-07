@@ -35,6 +35,8 @@ Action, Festival, +2 Actions; +1 Buy; +$2, 5, 0, 10
 Action, Gardens, Worth 1 victory point for every 10 cards in your deck at the end of the game
 (rounded down), 4, 0, 10
 
+Action, Junk Dealer, +1 Card; +1 Action; +$1; Trash a card from your hand, 5, 0, 10
+
 Action, Laboratory, +2 Cards; +1 Action, 5, 0, 10
 
 Action, Library, Draw until you have 7 cards in hand. You may set aside any Action cards drawn this
@@ -59,6 +61,8 @@ Action, Smithy, +3 cards, 4, 0, 10
 
 Action-Attack, Spy, +1 Card; +1 Action; Each player (including you) reveals the top card of his deck
  and either discards it or puts it back (your choice), 4, 0, 10
+
+Action, Steward, Choose 1: +2 Cards; or +$2; or trash 2 cards from your hand, 3, 0, 10
 
 Action-Attack, Thief, Each other player reveals the top 2 cards of his deck. If they revealed any
  Treasure cards then they trash one of them that you choose. You may gain this trashed card. They
