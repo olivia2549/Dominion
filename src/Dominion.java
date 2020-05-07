@@ -6,8 +6,8 @@ public class Dominion {
     public static final int MONEY_POS = 0;
     public static final int ACTIONS_POS = 1;
     public static final int BUYS_POS = 2;
-    public static final int ALL_CARD_TYPES = 34;
-    public static final int ALL_ACTION_CARDS = 27;
+    public static final int ALL_CARD_TYPES = 35;
+    public static final int ALL_ACTION_CARDS = 28;
 
     public static void main(String[] args) throws FileNotFoundException {
         Card[] allCards = new Card[ALL_CARD_TYPES];
@@ -445,6 +445,9 @@ public class Dominion {
             case "Moneylender":
                 moneylender(hand, info);
                 break;
+            case "Mountebank":
+                mountebank(scnr, discardPile, hand, cardsInMiddle, info, false);
+                break;
             case "Remodel":
                 remodel(scnr, discardPile, hand, cardsInMiddle, info);
                 break;
@@ -534,7 +537,7 @@ public class Dominion {
                                         ArrayList<Card> drawPile, ArrayList<Card> discardPile, int[] info) {
 
         System.out.println("\nWhich of these cards did your opponent play?");
-        System.out.println("1. Bureaucrat\n2. Militia\n3. Spy\n4. Thief\n5. Witch\n6. Council Room");
+        System.out.println("1. Bureaucrat\n2. Militia\n3. Spy\n4. Thief\n5. Witch\n6.Mountebank\n7. Council Room");
         System.out.println("\nChoose an option:");
 
         String optionStr = scnr.nextLine();
@@ -556,6 +559,9 @@ public class Dominion {
                 witch(scnr, cardsInMiddle, drawPile, discardPile, hand, info, true);
                 break;
             case 6:
+                mountebank(scnr, discardPile, hand, cardsInMiddle, info, true);
+                break;
+            case 7:
                 councilRoom(scnr, drawPile, discardPile, hand, info, true);
                 break;
         }
@@ -1024,6 +1030,35 @@ public class Dominion {
             System.out.println("Sorry, you did not have a copper to trash. No extra money was added.");
         }
 
+    }
+
+    public static void mountebank(Scanner scnr, ArrayList<Card> discardPile, ArrayList<Card> hand,
+                                  Card[] cardsInMiddle, int[] info, boolean opponent) {
+        if (!opponent) {
+            System.out.println("Adding $2...");
+            info[MONEY_POS] += 2;
+            System.out.println("Done.\n");
+            System.out.println("Your opponent must now choose option 2 on their menu to be affected by your attack.");
+            System.out.println("Press enter when they have done so:");
+            scnr.nextLine();
+        } else {
+            boolean hasCurse = false;
+            for (Card card : hand) {
+                if (card.getType().equals("Curse")) {
+                    hasCurse = true;
+                    discardCard(hand, discardPile, card, info);
+                    break;
+                }
+            }
+            if (!hasCurse) {
+                System.out.println("You do not have a curse to discard. Gaining a curse and a copper...");
+                discardPile.add(findCard("Curse", cardsInMiddle));
+                findCard("Curse", cardsInMiddle).decreaseNumRemaining();
+                discardPile.add(findCard("Copper", cardsInMiddle));
+                findCard("Copper", cardsInMiddle).decreaseNumRemaining();
+                System.out.println("Done.");
+            }
+        }
     }
 
     public static void remodel(Scanner scnr, ArrayList<Card> discardPile, ArrayList<Card> hand, Card[] cardsInMiddle,
