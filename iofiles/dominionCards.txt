@@ -15,6 +15,11 @@ Curse, Curse, Minus 1 point at the end of the game, 0, -1, 10
 Action, Adventurer, Reveal cards from your deck until you reveal 2 Treasure cards. Put those
  Treasure cards in your hand and discard the other revealed cards, 6, 0, 10
 
+Action-Attack, Ambassador, Reveal a card from your hand. Return up to 2 copies of it from your hand
+ to the Supply. Then each other player gains a copy of it, 3, 0, 10
+
+Action, Border Village, +1 Card; +2 Actions; Gain a cheaper card when you gain this, 6, 0, 10
+
 Action-Attack, Bureaucrat, Gain a silver card; put it on top of your deck. Each other player reveals
  a Victory card from his hand and puts it on his deck (or reveals a hand with no Victory cards), 4,
  0, 10
@@ -37,6 +42,8 @@ Action, Gardens, Worth 1 victory point for every 10 cards in your deck at the en
 
 Action, Junk Dealer, +1 Card; +1 Action; +$1; Trash a card from your hand, 5, 0, 10
 
+Action, King's Court, You may play an action card from your hand 3 times, 7, 0, 10
+
 Action, Laboratory, +2 Cards; +1 Action, 5, 0, 10
 
 Action, Library, Draw until you have 7 cards in hand. You may set aside any Action cards drawn this
@@ -57,6 +64,9 @@ Action, Moneylender, Trash a Copper from your hand. If you do you get +$3, 4, 0,
 Action-Attack, Mountebank, +$2; Each other player may discard a curse. If they don't they gain a
  curse and a copper, 5, 0, 10
 
+Action, Remake, Do this twice: Trash a card from your hand then gain a card costing exactly $1 more
+ than it, 4, 0, 10
+
 Action, Remodel, Trash a card from your hand. Gain a card costing up to $2 more than the trashed
  card, 4, 0, 10
 
@@ -74,6 +84,9 @@ Action-Attack, Thief, Each other player reveals the top 2 cards of his deck. If 
 Action, Throne Room, Choose an Action card in your hand. Play it twice, 4, 0, 10
 
 Action, Village, +1 Card; +2 Actions, 3, 0, 10
+
+Action, Wandering Minstrel, +1 Card; +2 Actions; Reveal the top 3 cards of your deck. Put the
+ action cards back in any order and discard the rest, 4, 0, 10
 
 Action-Attack, Witch, +2 Cards; Each other player gains a Curse card, 5, 0, 10
 
