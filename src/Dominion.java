@@ -784,7 +784,7 @@ public class Dominion {
                     condition = card.getType().equals("Treasure") && !card.getType().equals("Gold");
                     break;
                 case "Remake-Gain":
-                    condition = card.getCost() <= (1 + cost);
+                    condition = (card.getCost() == (1 + cost));
                     break;
                 case "Remodel-Gain":
                     condition = card.getCost() <= (2 + cost);
@@ -807,11 +807,14 @@ public class Dominion {
             }
         }
 
-        System.out.println("\nEnter your choice:");
-        String optionStr = scnr.nextLine();
-        int choice = getValidDigit(scnr, optionStr, (option - 1));
+        if (options.size() > 0) {
+            System.out.println("\nEnter your choice:");
+            String optionStr = scnr.nextLine();
+            int choice = getValidDigit(scnr, optionStr, (option - 1));
+            return options.get(choice - 1);
+        }
 
-        return options.get(choice - 1);
+        return new Card();
     }
 
     public static void adventurer(ArrayList<Card> drawPile, ArrayList<Card> discardPile, ArrayList<Card> hand,
@@ -1017,7 +1020,9 @@ public class Dominion {
 
         Card cardGained = printOptions(scnr, cardsInMiddle, "Feast", 0);
 
-        gainCard(discardPile, cardGained);
+        if (!cardGained.getName().equals("")) {
+            gainCard(discardPile, cardGained);
+        }
     }
 
     public static void festival(int[] info) {
@@ -1039,7 +1044,9 @@ public class Dominion {
 
         System.out.println("Choose a card to trash.\n");
         Card cardToTrash = printOptions(scnr, hand, "Junk Dealer", 0);
-        trashCard(hand, cardToTrash, info);
+        if (!cardToTrash.getName().equals("")) {
+            trashCard(hand, cardToTrash, info);
+        }
     }
 
     public static void laboratory(ArrayList<Card> drawPile, ArrayList<Card> discardPile, ArrayList<Card> hand,
@@ -1115,7 +1122,9 @@ public class Dominion {
         System.out.println("Choose a treasure card from your hand to trash.\n");
 
         Card cardTrashed = printOptions(scnr, hand, "Mine", 0);
-        trashCard(hand, cardTrashed, info);
+        if (!cardTrashed.getName().equals("")) {
+            trashCard(hand, cardTrashed, info);
+        }
 
         // Gain a card costing 3 more
         Card cardToGain = new Card();
@@ -1194,11 +1203,15 @@ public class Dominion {
         for (int i=0; i<2; ++i) {
             System.out.println("Choose a card from your hand to trash.\n");
             Card cardTrashed = printOptions(scnr, hand, "Remake-Trash", 0);
-            trashCard(hand, cardTrashed, info);
+            if (!cardTrashed.getName().equals("")) {
+                trashCard(hand, cardTrashed, info);
+            }
 
             System.out.println("Now choose a card to gain.\n");
             Card cardToGain = printOptions(scnr, cardsInMiddle, "Remake-Gain", cardTrashed.getCost());
-            gainCard(discardPile, cardToGain);
+            if (!cardToGain.getName().equals("")) {
+                gainCard(discardPile, cardToGain);
+            }
         }
     }
 
@@ -1206,12 +1219,16 @@ public class Dominion {
                                int[] info) {
         System.out.println("Choose a card from your hand to trash.\n");
         Card cardTrashed = printOptions(scnr, hand, "Remodel-Trash", 0);
-        trashCard(hand, cardTrashed, info);
+        if (!cardTrashed.getName().equals("")) {
+            trashCard(hand, cardTrashed, info);
+        }
 
         // Gain a card costing up to $2 more
         System.out.println("Now choose a card to gain.\n");
         Card cardToGain = printOptions(scnr, cardsInMiddle, "Remodel-Gain", cardTrashed.getCost());
-        gainCard(discardPile, cardToGain);
+        if (!cardToGain.getName().equals("")) {
+            gainCard(discardPile, cardToGain);
+        }
     }
 
     public static void smithy(ArrayList<Card> drawPile, ArrayList<Card> discardPile, ArrayList<Card> hand, int[] info) {
@@ -1526,7 +1543,9 @@ public class Dominion {
         System.out.println("You may gain a card costing up to $4.\n");
 
         Card cardGained = printOptions(scnr, cardsInMiddle, "Workshop", 0);
-        gainCard(discardPile, cardGained);
+        if (!cardGained.getName().equals("")) {
+            gainCard(discardPile, cardGained);
+        }
     }
 
 }
