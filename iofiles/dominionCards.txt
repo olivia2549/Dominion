@@ -40,6 +40,9 @@ Action, Festival, +2 Actions; +1 Buy; +$2, 5, 0, 10
 Action, Gardens, Worth 1 victory point for every 10 cards in your deck at the end of the game
 (rounded down), 4, 0, 10
 
+Action, Harbinger, +1 Card; +1 Action; Look through your discard pile. You may put a card from it
+ onto your deck.
+
 Action, Junk Dealer, +1 Card; +1 Action; +$1; Trash a card from your hand, 5, 0, 10
 
 Action, King's Court, You may play an action card from your hand 3 times, 7, 0, 10
