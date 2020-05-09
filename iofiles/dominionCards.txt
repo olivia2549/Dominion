@@ -8,7 +8,7 @@ Victory, Estate, Worth 1 point at the end of the game, 2, 1, 18
 
 Victory, Duchy, Worth 3 points at the end of the game, 5, 3, 12
 
-Victory, Province, Worth 6 points at the end of the game, 8, 6, 12
+Victory, Province, Worth 6 points at the end of the game, 8, 6, 8
 
 Curse, Curse, Minus 1 point at the end of the game, 0, -1, 10
 
@@ -17,6 +17,9 @@ Action, Adventurer, Reveal cards from your deck until you reveal 2 Treasure card
 
 Action-Attack, Ambassador, Reveal a card from your hand. Return up to 2 copies of it from your hand
  to the Supply. Then each other player gains a copy of it, 3, 0, 10
+
+Action-Attack, Bandit, Gain a gold. Each other player reveals the top 2 cards of their deck then
+trashes a revealed treasure other than copper and discards the rest, 5, 0, 10
 
 Action, Border Village, +1 Card; +2 Actions; Gain a cheaper card when you gain this, 6, 0, 10
 
@@ -41,7 +44,7 @@ Action, Gardens, Worth 1 victory point for every 10 cards in your deck at the en
 (rounded down), 4, 0, 10
 
 Action, Harbinger, +1 Card; +1 Action; Look through your discard pile. You may put a card from it
- onto your deck.
+ onto your deck, 3, 0, 10
 
 Action, Junk Dealer, +1 Card; +1 Action; +$1; Trash a card from your hand, 5, 0, 10
 
@@ -53,6 +56,9 @@ Action, Library, Draw until you have 7 cards in hand. You may set aside any Acti
  way as you draw them; discard the set aside cards after you finish drawing, 5, 0, 10
 
 Action, Market, +1 Card; +1 Action; +1 Buy; +$1, 5, 0, 10
+
+Action, Merchant, +1 Card; +1 Action; The first time you play a silver this turn you get +$1, 3, 0,
+ 10
 
 Action-Attack, Militia, +$2; Each other player discards down to 3 cards in his hand, 4, 0, 10
 
@@ -73,6 +79,9 @@ Action, Remake, Do this twice: Trash a card from your hand then gain a card cost
 Action, Remodel, Trash a card from your hand. Gain a card costing up to $2 more than the trashed
  card, 4, 0, 10
 
+Action, Sentry, Look at the top 2 cards of your deck. Trash and/or discard any number of them. Put
+ the rest back on top in any order, 5, 0, 10
+
 Action, Smithy, +3 cards, 4, 0, 10
 
 Action-Attack, Spy, +1 Card; +1 Action; Each player (including you) reveals the top card of his deck
@@ -85,6 +94,9 @@ Action-Attack, Thief, Each other player reveals the top 2 cards of his deck. If 
  discard the other revealed cards, 4, 0, 10
 
 Action, Throne Room, Choose an Action card in your hand. Play it twice, 4, 0, 10
+
+Action, Vassal, +$2; Discard the top card of your deck. If it's an action card you may play it, 3,
+ 0, 10
 
 Action, Village, +1 Card; +2 Actions, 3, 0, 10
 
