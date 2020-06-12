@@ -17,7 +17,7 @@ public class Dominion {
 
         Scanner scnr = new Scanner(System.in);
         Random rand = new Random();
-        rand.setSeed(356587);
+        rand.setSeed(6);
 
         ArrayList<Card> drawPile = new ArrayList<>();
         ArrayList<Card> discardPile = new ArrayList<>();
