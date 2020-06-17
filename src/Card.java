@@ -5,6 +5,7 @@ public class Card {
     private int cost;
     private int value;
     private int numRemaining;
+    private int numDurationPlays;
 
     public Card() {
         type = "";
@@ -13,15 +14,17 @@ public class Card {
         cost = 0;
         value = 0;
         numRemaining = 0;
+        numDurationPlays = 0;
     }
 
-    public Card(String type, String name, String description, int cost, int value, int numRemaining) {
+    public Card(String type, String name, String description, int cost, int value, int numRemaining, int numPlays) {
         this.type = type;
         this.name = name;
         this.description = description;
         this.cost = cost;
         this.value = value;
         this.numRemaining = numRemaining;
+        this.numDurationPlays = numPlays;
     }
 
     public String getType() {
@@ -46,6 +49,22 @@ public class Card {
 
     public void decreaseNumRemaining() {
         --numRemaining;
+    }
+
+    public int getNumDurationPlays() {
+        return numDurationPlays;
+    }
+
+    public void setNumDurationPlays(int numDurationPlays) {
+        this.numDurationPlays = numDurationPlays;
+    }
+
+    public void increaseNumDurationPlays() {
+         ++numDurationPlays;
+    }
+
+    public void decreaseNumDurationPlays() {
+        --numDurationPlays;
     }
 
     public String toString() {

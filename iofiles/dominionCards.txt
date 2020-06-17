@@ -21,6 +21,8 @@ Action-Attack, Ambassador, Reveal a card from your hand. Return up to 2 copies o
 Action-Attack, Bandit, Gain a gold. Each other player reveals the top 2 cards of their deck then
 trashes a revealed treasure other than copper and discards the rest, 5, 0, 10
 
+Action, Baron, +1 Buy; You may discard an Estate for +$4. If you don't gain an Estate, 4, 0, 10
+
 Action, Border Village, +1 Card; +2 Actions; Gain a cheaper card when you gain this, 6, 0, 10
 
 Action-Attack, Bureaucrat, Gain a silver card; put it on top of your deck. Each other player reveals
