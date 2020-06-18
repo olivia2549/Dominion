@@ -39,6 +39,10 @@ public class Card {
         return cost;
     }
 
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
     public int getValue() {
         return value;
     }
