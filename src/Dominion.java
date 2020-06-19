@@ -789,7 +789,8 @@ public class Dominion {
         }
 
         if (numGoons > 0) {
-            System.out.println("You have " + numGoons + " Goons in play. Gaining victory point token(s)...");
+            System.out.println("You have " + numGoons + " Goons in play. Gaining " + numGoons + " victory point token" +
+                    "...");
             System.out.println("Done.\n");
         }
     }
