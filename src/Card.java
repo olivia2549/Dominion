@@ -6,6 +6,7 @@ public class Card {
     private int value;
     private int numRemaining;
     private int numDurationPlays;
+    private boolean trashCard;
 
     public Card() {
         type = "";
@@ -15,6 +16,7 @@ public class Card {
         value = 0;
         numRemaining = 0;
         numDurationPlays = 0;
+        trashCard = false;
     }
 
     public Card(String type, String name, String description, int cost, int value, int numRemaining, int numPlays) {
@@ -25,6 +27,7 @@ public class Card {
         this.value = value;
         this.numRemaining = numRemaining;
         this.numDurationPlays = numPlays;
+        trashCard = false;
     }
 
     public String getType() {
@@ -71,9 +74,17 @@ public class Card {
         --numDurationPlays;
     }
 
+    public void setTrashCard(boolean trashCard) {
+        this.trashCard = trashCard;
+    }
+
+    public boolean getTrashCard() {
+        return trashCard;
+    }
+
     public String toString() {
         String card = "";
-        if ((type.equals("Action")) || (type.equals("Action-Attack"))) {
+        if (type.contains("Action") || name.equals("Harem") || name.equals("Hoard") || name.equals("Talisman")) {
             card += (name + " $" + cost + "\n" + description + " (" + numRemaining + " remaining)");
         } else {
             card += (name + " $" + cost + " (" + numRemaining + " remaining)");
